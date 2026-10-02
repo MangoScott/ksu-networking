@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Board member sign-in · Finance Super Week</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark" aria-hidden="true">KSU</span>
+        <span class="brand__text"><strong>Department of Finance</strong><span>Board member availability</span></span>
+      </a>
+      <nav class="topbar__nav"><a href="/">Student page</a><button class="btn btn--small btn--ghost" id="signout" type="button" hidden>Sign out</button></nav>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container container--narrow">
+
+      <!-- Step 1: sign in -->
+      <section id="step-signin" class="card form">
+        <h2>Welcome, board member</h2>
+        <p class="muted">Enter the access code from the department, then choose your name. Takes about 30 seconds.</p>
+        <label class="field">
+          <span>Access code</span>
+          <input id="code" type="password" autocomplete="off" autofocus />
+        </label>
+        <label class="field" id="who-field" hidden>
+          <span>Your name</span>
+          <select id="who"></select>
+        </label>
+        <p class="form__status" id="signin-status" role="status"></p>
+        <button class="btn btn--block" id="signin-btn" type="button">Continue</button>
+      </section>
+
+      <!-- Step 2: manage availability -->
+      <section id="step-manage" hidden>
+        <div class="section__head">
+          <h2 id="hello">Your availability</h2>
+          <p class="muted" id="totals"></p>
+        </div>
+
+        <form class="card form" id="add-form" novalidate>
+          <h3>Add open times</h3>
+          <p class="muted" style="margin-top:-8px">Pick a date and a window. We'll split it into back-to-back slots students can claim one at a time.</p>
+          <div class="form__grid form__grid--4">
+            <label class="field"><span>Date</span><input name="date" type="date" required /></label>
+            <label class="field"><span>From</span><input name="startTime" type="time" step="300" required /></label>
+            <label class="field"><span>Until</span><input name="endTime" type="time" step="300" /><small class="hint">Leave blank for a single slot.</small></label>
+            <label class="field"><span>Slot length</span>
+              <select name="durationMinutes">
+                <option value="15">15 min</option>
+                <option value="20" selected>20 min</option>
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60">60 min</option>
+              </select>
+            </label>
+          </div>
+          <p class="form__status" id="add-status" role="status"></p>
+          <button class="btn" type="submit" id="add-btn">Add times</button>
+        </form>
+
+        <div id="my-slots" class="my-slots"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/shared.js"></script>
+  <script>
+    const fmt = window.fmt, el = fmt.el;
+    const $ = (id) => document.getElementById(id);
+    let code = sessionStorage.getItem("boardCode") || "";
+    let members = [];
+    let me = null;
+
+    const headers = () => ({ "x-board-code": code, "Content-Type": "application/json" });
+    const status = (id, text, kind) => { const n = $(id); n.textContent = text || ""; n.className = "form__status" + (kind ? " is-" + kind : ""); };
+
+    async function verify(c) {
+      const r = await fetch("/api/board/verify", { method: "POST", headers: { "x-board-code": c } });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.error || "Couldn't sign in.");
+      return data.members;
+    }
+
+    $("signin-btn").addEventListener("click", async () => {
+      status("signin-status", "");
+      try {
+        if (!members.length) {
+          const c = $("code").value.trim();
+          if (!c) return status("signin-status", "Enter the access code.", "error");
+          members = await verify(c);
+          code = c;
+          sessionStorage.setItem("boardCode", code);
+          const sel = $("who");
+          sel.innerHTML = "";
+          sel.append(el("option", { value: "", text: "Select your name…" }));
+          for (const m of members) sel.append(el("option", { value: m.id, text: m.name }));
+          $("who-field").hidden = false;
+          $("code").parentElement.hidden = true;
+          const remembered = sessionStorage.getItem("boardMember");
+          if (remembered && members.some((m) => m.id === remembered)) sel.value = remembered;
+          sel.focus();
+          $("signin-btn").textContent = "Show my availability";
+          if (sel.value) return $("signin-btn").click();
+          return;
+        }
+        const id = $("who").value;
+        if (!id) return status("signin-status", "Choose your name.", "error");
+        me = members.find((m) => m.id === id);
+        sessionStorage.setItem("boardMember", id);
+        enter();
+      } catch (err) {
+        status("signin-status", err.message, "error");
+      }
+    });
+    $("code").addEventListener("keydown", (e) => { if (e.key === "Enter") $("signin-btn").click(); });
+
+    $("signout").addEventListener("click", () => { sessionStorage.clear(); location.reload(); });
+
+    async function enter() {
+      $("step-signin").hidden = true;
+      $("step-manage").hidden = false;
+      $("signout").hidden = false;
+      $("hello").textContent = `${me.name}, here's your availability`;
+      await loadSlots();
+    }
+
+    async function loadSlots() {
+      const r = await fetch(`/api/board/slots?memberId=${encodeURIComponent(me.id)}`, { headers: { "x-board-code": code } });
+      if (!r.ok) return status("add-status", "Couldn't load your times. Try signing in again.", "error");
+      const slots = await r.json();
+      const open = slots.filter((s) => !s.booking).length;
+      $("totals").textContent = slots.length
+        ? `${slots.length - open} booked · ${open} still open`
+        : "You haven't added any times yet. Add a window below and students will see it right away.";
+
+      const wrap = $("my-slots");
+      wrap.innerHTML = "";
+      const byDate = new Map();
+      for (const s of slots) (byDate.get(s.date) || byDate.set(s.date, []).get(s.date)).push(s);
+
+      for (const [date, list] of byDate) {
+        wrap.append(
+          el("section", { class: "card day-card" }, [
+            el("h3", { text: fmt.longDate(date) }),
+            el("ul", { class: "slot-rows" }, list.map((s) => slotRow(s))),
+          ])
+        );
+      }
+    }
+
+    function slotRow(s) {
+      const when = el("div", { class: "slot-row__when" }, [
+        el("strong", { text: fmt.time(s.time) }),
+        el("small", { text: `${s.durationMinutes} min` }),
+      ]);
+      if (!s.booking) {
+        return el("li", { class: "slot-row" }, [
+          when,
+          el("span", { class: "pill pill--open", text: "Open" }),
+          el("button", {
+            type: "button", class: "link-btn", text: "Remove",
+            onclick: async (e) => {
+              e.target.disabled = true;
+              const r = await fetch(`/api/board/slots/${s.id}`, { method: "DELETE", headers: headers() });
+              if (!r.ok) { const d = await r.json().catch(() => ({})); alert(d.error || "Couldn't remove that time."); e.target.disabled = false; return; }
+              loadSlots();
+            },
+          }),
+        ]);
+      }
+      const st = s.booking.student;
+      return el("li", { class: "slot-row is-booked" }, [
+        when,
+        el("div", { class: "student" }, [
+          el("strong", { text: st.name }),
+          el("span", { class: "muted", text: [st.major, st.gradYear].filter(Boolean).join(" · ") }),
+          el("div", { class: "student__links" }, [
+            el("a", { href: `/api/board/resumes/${encodeURIComponent(s.booking.resume.storedName)}?code=${encodeURIComponent(code)}`, text: "Resume" }),
+            st.linkedin ? el("a", { href: st.linkedin, target: "_blank", rel: "noopener", text: "LinkedIn" }) : el("span", { class: "muted", text: "No LinkedIn" }),
+            el("a", { href: `mailto:${st.email}`, text: st.email }),
+          ]),
+          st.message ? el("p", { class: "student__note", text: "“" + st.message + "”" }) : null,
+        ]),
+      ]);
+    }
+
+    $("add-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status("add-status", "");
+      const f = e.target;
+      const body = {
+        memberId: me.id,
+        date: f.elements.date.value,
+        startTime: f.elements.startTime.value,
+        endTime: f.elements.endTime.value || null,
+        durationMinutes: Number(f.elements.durationMinutes.value),
+      };
+      if (!body.date || !body.startTime) return status("add-status", "Pick a date and a start time.", "error");
+      $("add-btn").disabled = true;
+      try {
+        const r = await fetch("/api/board/slots", { method: "POST", headers: headers(), body: JSON.stringify(body) });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.error || "Couldn't add those times.");
+        status("add-status", data.added ? `Added ${data.added} open time${data.added === 1 ? "" : "s"}.` : "Those times overlap ones you already have, so nothing new was added.", data.added ? "ok" : "error");
+        f.elements.endTime.value = "";
+        await loadSlots();
+      } catch (err) {
+        status("add-status", err.message, "error");
+      } finally {
+        $("add-btn").disabled = false;
+      }
+    });
+
+    // Auto sign-in if this browser tab already has a code.
+    (async () => {
+      if (!code) return;
+      try {
+        members = await verify(code);
+        $("code").value = code;
+        $("signin-btn").click();
+      } catch { sessionStorage.clear(); code = ""; }
+    })();
+  </script>
+</body>
+</html>

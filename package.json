@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "seed": "node -e \"require('fs').copyFileSync('data/slots.sample.json','data/slots.json');console.log('Seeded data/slots.json with sample availability')\""
   },
   "license": "MIT",
   "dependencies": {

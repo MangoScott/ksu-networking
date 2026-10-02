@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
-  <title>Submissions · Resume Connect Admin</title>
+  <title>Bookings · Finance Super Week Admin</title>
   <link rel="stylesheet" href="/styles.css" />
   <style>
     .table-wrap { overflow-x: auto; }
@@ -12,8 +12,11 @@
     th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
     th { background: var(--bg-alt); font-weight: 600; white-space: nowrap; }
     td small { color: var(--muted); display: block; }
-    .tag { display: inline-block; background: rgba(0,38,100,0.08); color: var(--navy); padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; margin: 2px 4px 2px 0; }
-    .note { max-width: 36ch; white-space: pre-wrap; }
+    td a + a::before { content: " · "; color: var(--muted); }
+    .note { max-width: 32ch; white-space: pre-wrap; }
+    .kpis { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 20px; padding: 0; list-style: none; }
+    .kpis li { background: var(--bg-alt); border-radius: 10px; padding: 10px 16px; }
+    .kpis strong { color: var(--navy); font-size: 1.3rem; margin-right: 6px; }
   </style>
 </head>
 <body>
@@ -21,65 +24,65 @@
     <div class="container topbar__inner">
       <a class="brand" href="/">
         <span class="brand__mark" aria-hidden="true">KSU</span>
-        <span class="brand__text"><strong>Resume Connect</strong><span>Admin · Submissions</span></span>
+        <span class="brand__text"><strong>Super Week</strong><span>Admin · Bookings</span></span>
       </a>
-      <nav class="topbar__nav"><a href="/">Back to site</a></nav>
+      <nav class="topbar__nav"><a href="/">Student page</a><a href="/board">Board page</a></nav>
     </div>
   </header>
   <main class="section">
     <div class="container">
-      <h2>Resume review requests</h2>
+      <h2>Resume review bookings</h2>
+      <ul class="kpis" id="kpis"></ul>
       <p class="muted" id="summary">Loading…</p>
       <div class="card table-wrap">
         <table>
           <thead>
-            <tr>
-              <th>Submitted</th><th>Student</th><th>Program</th><th>Requested board members</th><th>Note</th><th>Resume</th>
-            </tr>
+            <tr><th>Booked</th><th>Student</th><th>Program</th><th>Board member</th><th>Time</th><th>Note</th><th>Links</th></tr>
           </thead>
           <tbody id="rows"></tbody>
         </table>
       </div>
     </div>
   </main>
+  <script src="/shared.js"></script>
   <script>
+    const fmt = window.fmt, el = fmt.el;
     const token = new URLSearchParams(location.search).get("token") || "";
-    const rows = document.getElementById("rows");
-    const summary = document.getElementById("summary");
-    const td = (content) => { const c = document.createElement("td"); if (typeof content === "string") c.textContent = content; else c.append(content); return c; };
+    const h = { "x-admin-token": token };
+    const td = (...kids) => el("td", {}, kids);
 
-    fetch("/api/admin/submissions", { headers: { "x-admin-token": token } })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-      .then((list) => {
-        summary.textContent = `${list.length} request${list.length === 1 ? "" : "s"} · newest first`;
-        for (const s of list) {
-          const tr = document.createElement("tr");
-          tr.append(td(new Date(s.submittedAt).toLocaleString()));
-          const student = document.createElement("div");
-          student.textContent = s.student.name;
-          const mail = document.createElement("small");
-          const a = document.createElement("a"); a.href = `mailto:${s.student.email}`; a.textContent = s.student.email;
-          mail.append(a); student.append(mail);
-          tr.append(td(student));
-          const prog = document.createElement("div");
-          prog.textContent = s.student.major || "—";
-          const gy = document.createElement("small"); gy.textContent = s.student.gradYear || ""; prog.append(gy);
-          tr.append(td(prog));
-          const bm = document.createElement("div");
-          for (const m of s.boardMembers) {
-            const t = document.createElement("span"); t.className = "tag"; t.textContent = m.name; t.title = m.email || ""; bm.append(t);
-          }
-          tr.append(td(bm));
-          const note = document.createElement("div"); note.className = "note"; note.textContent = s.student.message || "—";
-          tr.append(td(note));
-          const link = document.createElement("a");
-          link.href = `/api/admin/resumes/${encodeURIComponent(s.resume.storedName)}?token=${encodeURIComponent(token)}`;
-          link.textContent = s.resume.originalName;
-          tr.append(td(link));
-          rows.append(tr);
+    Promise.all([
+      fetch("/api/admin/bookings", { headers: h }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))),
+      fetch("/api/admin/slots", { headers: h }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))),
+    ])
+      .then(([list, slots]) => {
+        const open = slots.filter((s) => !s.bookingId).length;
+        document.getElementById("kpis").append(
+          el("li", {}, [el("strong", { text: list.length }), "bookings"]),
+          el("li", {}, [el("strong", { text: open }), "open slots"]),
+          el("li", {}, [el("strong", { text: new Set(slots.map((s) => s.memberId)).size }), "board members with times"]),
+        );
+        document.getElementById("summary").textContent = list.length ? "Newest first." : "No bookings yet.";
+        const rows = document.getElementById("rows");
+        for (const b of list) {
+          const s = b.student;
+          rows.append(
+            el("tr", {}, [
+              td(new Date(b.submittedAt).toLocaleString()),
+              td(s.name, el("small", {}, [el("a", { href: `mailto:${s.email}`, text: s.email })])),
+              td(s.major || "—", el("small", { text: s.gradYear || "" })),
+              td(b.member.name, el("small", { text: b.member.email || "" })),
+              td(b.slot ? `${fmt.date(b.slot.date)} · ${fmt.time(b.slot.time)}` : "—", el("small", { text: b.slot ? `${b.slot.durationMinutes} min` : "slot removed" })),
+              td(el("div", { class: "note", text: s.message || "—" })),
+              td(
+                el("a", { href: `/api/admin/resumes/${encodeURIComponent(b.resume.storedName)}?token=${encodeURIComponent(token)}`, text: "Resume" }),
+                s.linkedin ? el("a", { href: s.linkedin, target: "_blank", rel: "noopener", text: "LinkedIn" }) : null,
+              ),
+            ])
+          );
         }
       })
-      .catch((err) => { summary.textContent = `Couldn't load submissions (${err.message}). Check your admin token.`; });
+      .catch((err) => { document.getElementById("summary").textContent = `Couldn't load bookings (${err.message}). Check your admin token.`; });
   </script>
 </body>
 </html>

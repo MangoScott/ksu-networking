@@ -4,53 +4,83 @@
     "name": "Jane Doe",
     "title": "Managing Director, Investment Banking",
     "company": "Example Capital Partners",
-    "focus": ["Investment Banking", "M&A", "Capital Markets"],
+    "focus": [
+      "Investment Banking",
+      "M&A",
+      "Capital Markets"
+    ],
     "bio": "Kent State alumna with 20+ years advising mid-market companies on mergers and acquisitions.",
-    "email": "jane.doe@example.com"
+    "email": "jane.doe@example.com",
+    "linkedin": "https://www.linkedin.com/in/jane-doe-example"
   },
   {
     "id": "john-smith",
     "name": "John Smith",
     "title": "Chief Financial Officer",
     "company": "Example Manufacturing Co.",
-    "focus": ["Corporate Finance", "FP&A", "Treasury"],
+    "focus": [
+      "Corporate Finance",
+      "FP&A",
+      "Treasury"
+    ],
     "bio": "Leads finance for a Northeast Ohio manufacturer. Enjoys helping students break into corporate finance.",
-    "email": "john.smith@example.com"
+    "email": "john.smith@example.com",
+    "linkedin": "https://www.linkedin.com/in/john-smith-example"
   },
   {
     "id": "maria-garcia",
     "name": "Maria Garcia",
     "title": "Senior Portfolio Manager",
     "company": "Example Asset Management",
-    "focus": ["Asset Management", "Equity Research", "CFA Prep"],
+    "focus": [
+      "Asset Management",
+      "Equity Research",
+      "CFA Prep"
+    ],
     "bio": "CFA charterholder managing institutional equity portfolios. Happy to review resumes targeting buy-side roles.",
-    "email": "maria.garcia@example.com"
+    "email": "maria.garcia@example.com",
+    "linkedin": "https://www.linkedin.com/in/maria-garcia-example"
   },
   {
     "id": "david-lee",
     "name": "David Lee",
     "title": "Senior Vice President, Commercial Banking",
     "company": "Example Bank",
-    "focus": ["Commercial Banking", "Credit Analysis", "Relationship Management"],
+    "focus": [
+      "Commercial Banking",
+      "Credit Analysis",
+      "Relationship Management"
+    ],
     "bio": "Runs a commercial lending team and recruits regularly from Kent State's finance program.",
-    "email": "david.lee@example.com"
+    "email": "david.lee@example.com",
+    "linkedin": "https://www.linkedin.com/in/david-lee-example"
   },
   {
     "id": "sarah-johnson",
     "name": "Sarah Johnson",
     "title": "Certified Financial Planner",
     "company": "Example Wealth Advisors",
-    "focus": ["Wealth Management", "Financial Planning", "Client Advisory"],
+    "focus": [
+      "Wealth Management",
+      "Financial Planning",
+      "Client Advisory"
+    ],
     "bio": "Founder of an independent advisory practice. Mentors students interested in personal financial planning.",
-    "email": "sarah.johnson@example.com"
+    "email": "sarah.johnson@example.com",
+    "linkedin": "https://www.linkedin.com/in/sarah-johnson-example"
   },
   {
     "id": "michael-brown",
     "name": "Michael Brown",
     "title": "Director of Risk Management",
     "company": "Example Insurance Group",
-    "focus": ["Risk Management", "Insurance", "Analytics"],
+    "focus": [
+      "Risk Management",
+      "Insurance",
+      "Analytics"
+    ],
     "bio": "Builds enterprise risk programs and loves talking to students about quantitative finance careers.",
-    "email": "michael.brown@example.com"
+    "email": "michael.brown@example.com",
+    "linkedin": "https://www.linkedin.com/in/michael-brown-example"
   }
 ]

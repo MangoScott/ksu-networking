@@ -1,0 +1,22 @@
+[
+  { "id": "s01", "memberId": "jane-doe",       "date": "2026-10-12", "time": "09:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s02", "memberId": "jane-doe",       "date": "2026-10-12", "time": "09:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s03", "memberId": "jane-doe",       "date": "2026-10-12", "time": "09:40", "durationMinutes": 20, "bookingId": null },
+  { "id": "s04", "memberId": "jane-doe",       "date": "2026-10-14", "time": "16:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s05", "memberId": "jane-doe",       "date": "2026-10-14", "time": "16:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s06", "memberId": "john-smith",     "date": "2026-10-13", "time": "12:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s07", "memberId": "john-smith",     "date": "2026-10-13", "time": "12:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s08", "memberId": "john-smith",     "date": "2026-10-13", "time": "12:40", "durationMinutes": 20, "bookingId": null },
+  { "id": "s09", "memberId": "maria-garcia",   "date": "2026-10-12", "time": "15:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s10", "memberId": "maria-garcia",   "date": "2026-10-12", "time": "15:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s11", "memberId": "maria-garcia",   "date": "2026-10-15", "time": "10:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s12", "memberId": "maria-garcia",   "date": "2026-10-15", "time": "10:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s13", "memberId": "david-lee",      "date": "2026-10-14", "time": "08:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s14", "memberId": "david-lee",      "date": "2026-10-14", "time": "08:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s15", "memberId": "sarah-johnson",  "date": "2026-10-16", "time": "13:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s16", "memberId": "sarah-johnson",  "date": "2026-10-16", "time": "13:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s17", "memberId": "sarah-johnson",  "date": "2026-10-16", "time": "13:40", "durationMinutes": 20, "bookingId": null },
+  { "id": "s18", "memberId": "michael-brown",  "date": "2026-10-13", "time": "17:00", "durationMinutes": 20, "bookingId": null },
+  { "id": "s19", "memberId": "michael-brown",  "date": "2026-10-13", "time": "17:20", "durationMinutes": 20, "bookingId": null },
+  { "id": "s20", "memberId": "michael-brown",  "date": "2026-10-15", "time": "17:00", "durationMinutes": 20, "bookingId": null }
+]
