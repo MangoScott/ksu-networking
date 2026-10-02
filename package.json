@@ -1,0 +1,16 @@
+{
+  "name": "ksu-finance-resume-connect",
+  "version": "1.0.0",
+  "description": "Landing page connecting Kent State students with Department of Finance board members for resume reviews",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}

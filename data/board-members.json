@@ -1,0 +1,56 @@
+[
+  {
+    "id": "jane-doe",
+    "name": "Jane Doe",
+    "title": "Managing Director, Investment Banking",
+    "company": "Example Capital Partners",
+    "focus": ["Investment Banking", "M&A", "Capital Markets"],
+    "bio": "Kent State alumna with 20+ years advising mid-market companies on mergers and acquisitions.",
+    "email": "jane.doe@example.com"
+  },
+  {
+    "id": "john-smith",
+    "name": "John Smith",
+    "title": "Chief Financial Officer",
+    "company": "Example Manufacturing Co.",
+    "focus": ["Corporate Finance", "FP&A", "Treasury"],
+    "bio": "Leads finance for a Northeast Ohio manufacturer. Enjoys helping students break into corporate finance.",
+    "email": "john.smith@example.com"
+  },
+  {
+    "id": "maria-garcia",
+    "name": "Maria Garcia",
+    "title": "Senior Portfolio Manager",
+    "company": "Example Asset Management",
+    "focus": ["Asset Management", "Equity Research", "CFA Prep"],
+    "bio": "CFA charterholder managing institutional equity portfolios. Happy to review resumes targeting buy-side roles.",
+    "email": "maria.garcia@example.com"
+  },
+  {
+    "id": "david-lee",
+    "name": "David Lee",
+    "title": "Senior Vice President, Commercial Banking",
+    "company": "Example Bank",
+    "focus": ["Commercial Banking", "Credit Analysis", "Relationship Management"],
+    "bio": "Runs a commercial lending team and recruits regularly from Kent State's finance program.",
+    "email": "david.lee@example.com"
+  },
+  {
+    "id": "sarah-johnson",
+    "name": "Sarah Johnson",
+    "title": "Certified Financial Planner",
+    "company": "Example Wealth Advisors",
+    "focus": ["Wealth Management", "Financial Planning", "Client Advisory"],
+    "bio": "Founder of an independent advisory practice. Mentors students interested in personal financial planning.",
+    "email": "sarah.johnson@example.com"
+  },
+  {
+    "id": "michael-brown",
+    "name": "Michael Brown",
+    "title": "Director of Risk Management",
+    "company": "Example Insurance Group",
+    "focus": ["Risk Management", "Insurance", "Analytics"],
+    "bio": "Builds enterprise risk programs and loves talking to students about quantitative finance careers.",
+    "email": "michael.brown@example.com"
+  }
+]

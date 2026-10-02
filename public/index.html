@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resume Connect · Kent State Department of Finance</title>
+  <meta name="description" content="Kent State finance students: upload your resume and connect with Department of Finance board members for a resume review." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark" aria-hidden="true">KSU</span>
+        <span class="brand__text">
+          <strong>Department of Finance</strong>
+          <span>Resume Connect</span>
+        </span>
+      </a>
+      <nav class="topbar__nav">
+        <a href="#how-it-works">How it works</a>
+        <a href="#board">Board members</a>
+        <a class="btn btn--small" href="#apply">Get started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <p class="eyebrow">For Kent State finance students</p>
+          <h1>Get your resume reviewed by the people who do the hiring.</h1>
+          <p class="lead">
+            Our Department of Finance Advisory Board members are finance leaders who want to help you land
+            your first role. Upload your resume, choose who you'd like to hear from, and we'll make the connection.
+          </p>
+          <div class="hero__actions">
+            <a class="btn" href="#apply">Upload your resume</a>
+            <a class="btn btn--ghost" href="#board">Meet the board</a>
+          </div>
+        </div>
+        <ul class="hero__stats" aria-label="Program highlights">
+          <li><strong>1</strong><span>resume upload</span></li>
+          <li><strong>3</strong><span>board members per request</span></li>
+          <li><strong>~1 wk</strong><span>typical response time</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section">
+      <div class="container">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li>
+            <span class="steps__num">1</span>
+            <h3>Upload your resume</h3>
+            <p>PDF or Word, up to 5 MB. Use your <code>@kent.edu</code> email so we know you're a Flash.</p>
+          </li>
+          <li>
+            <span class="steps__num">2</span>
+            <h3>Pick your reviewers</h3>
+            <p>Choose up to three board members whose industry or role matches your goals.</p>
+          </li>
+          <li>
+            <span class="steps__num">3</span>
+            <h3>We make the intro</h3>
+            <p>The department forwards your resume and note. Your reviewer follows up by email with feedback or a time to chat.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="board" class="section section--alt">
+      <div class="container">
+        <div class="section__head">
+          <h2>Meet the board</h2>
+          <p>Select the members you'd like to connect with. You can pick up to three.</p>
+        </div>
+        <p class="selection-count" id="selection-count" aria-live="polite">0 of 3 selected</p>
+        <div class="board-grid" id="board-grid" role="group" aria-label="Board members">
+          <p class="muted">Loading board members…</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="apply" class="section">
+      <div class="container container--narrow">
+        <div class="section__head">
+          <h2>Request a resume review</h2>
+          <p>Tell us a bit about yourself and attach your resume. Fields marked * are required.</p>
+        </div>
+
+        <form id="request-form" class="card form" novalidate>
+          <div class="form__grid">
+            <label class="field">
+              <span>Full name *</span>
+              <input name="name" type="text" autocomplete="name" required />
+            </label>
+            <label class="field">
+              <span>Kent State email *</span>
+              <input name="email" type="email" autocomplete="email" placeholder="flash@kent.edu" required />
+            </label>
+            <label class="field">
+              <span>Major / program</span>
+              <input name="major" type="text" placeholder="Finance, B.B.A." />
+            </label>
+            <label class="field">
+              <span>Expected graduation</span>
+              <input name="gradYear" type="text" placeholder="May 2027" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Resume (PDF or Word, max 5 MB) *</span>
+            <input name="resume" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
+          </label>
+
+          <label class="field">
+            <span>What are you hoping to get out of the review?</span>
+            <textarea name="message" rows="4" maxlength="1000" placeholder="e.g. I'm targeting investment banking summer analyst roles and would love feedback on how I present my internship experience."></textarea>
+          </label>
+
+          <div class="field">
+            <span>Board members you'd like to connect with *</span>
+            <ul class="chips" id="selected-chips" aria-live="polite">
+              <li class="muted">None selected yet. Pick up to three from the list above.</li>
+            </ul>
+            <div id="hidden-selections"></div>
+          </div>
+
+          <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+
+          <button class="btn btn--block" type="submit" id="submit-btn">Send my request</button>
+          <p class="fine-print">
+            Your resume is shared only with the board members you select and the Department of Finance staff
+            who coordinate introductions.
+          </p>
+        </form>
+
+        <div id="success" class="card success" hidden>
+          <h3>Request sent!</h3>
+          <p id="success-text"></p>
+          <p>Keep an eye on your Kent State inbox. Want to send another? <a href="/">Start over</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>Kent State University · Ambassador Crawford College of Business and Entrepreneurship · Department of Finance</p>
+      <p>Questions? Email <a href="mailto:finance@kent.edu">finance@kent.edu</a></p>
+    </div>
+  </footer>
+
+  <template id="member-card">
+    <label class="member">
+      <input type="checkbox" class="member__check" />
+      <span class="member__body">
+        <span class="member__avatar" aria-hidden="true"></span>
+        <span class="member__name"></span>
+        <span class="member__title"></span>
+        <span class="member__company"></span>
+        <span class="member__focus"></span>
+        <span class="member__bio"></span>
+      </span>
+      <span class="member__badge" aria-hidden="true">Selected</span>
+    </label>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
